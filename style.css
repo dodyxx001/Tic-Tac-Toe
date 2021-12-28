@@ -1,0 +1,117 @@
+* {
+    box-sizing: border-box;
+    /* border: 1px solid black; */
+    font-family: 'Montserrat', sans-serif;
+}
+
+html {
+    background-color: rgb(242, 250, 253);
+    display: flex;
+    justify-content: center;
+}
+
+body {
+    width: 60%;
+}
+
+
+/* Header section */
+
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+header button {
+    height: 3rem;
+    width: 9rem;
+    margin: 0 3rem;
+    font-size: 20px;
+    border: 1.5px solid rgb(35, 53, 160);
+    border-radius: 5px;
+    background-color: rgb(242, 250, 253);
+}
+
+button:hover {
+    background-color: rgb(209, 240, 252);
+    cursor: pointer;
+}
+
+.chosen {
+    border-width: 3px;
+}
+
+
+/* BOARD section */
+
+.main {
+    height: 30rem;
+    margin: 2rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.board {
+    display: grid;
+    grid-template: repeat(3, 1fr)/repeat(3, 1fr);
+}
+
+.field {
+    height: 8rem;
+    width: 8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    border-right: 4px solid rgb(35, 53, 160);
+    border-bottom: 4px solid rgb(35, 53, 160);
+}
+
+.field:hover{
+    cursor: pointer;
+}
+
+.no-r {
+    border-right: none;
+}
+
+.no-b {
+    border-bottom: none;
+}
+
+.clicked {
+    animation: showelement;
+    animation-duration: 2s;
+}
+
+@keyframes showelement {
+    0% {
+        scale: 1.5;
+        color: rgb(2, 2, 2, 0);
+        
+    }
+    100% {
+        scale: 1;
+        color: rgb(2, 2, 2);
+    }
+}
+
+
+/* Footer section */
+
+footer {
+    display: flex;
+    justify-content: center;
+}
+
+footer button {
+    height: 3rem;
+    width: 24rem;
+    font-size: 20px;
+    border: 1.5px solid rgb(35, 53, 160);
+    border-radius: 5px;
+    background-color: rgb(242, 250, 253);
+}
