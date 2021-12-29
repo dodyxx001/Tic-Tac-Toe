@@ -19,14 +19,6 @@ const gameBoard = (function () {
 })();
 
 
-// Render-decisions module
-// const renderDecisions = (function () {
-//     for (let i = 0; i <= 8; i++) {
-//         gameBoard.fields[i].textContent = gameBoard.decisions[i];
-//     };
-// })();
-
-
 // Creating players - factory function
 const Player = (type, symbol) => {
     return {
@@ -96,6 +88,75 @@ const players = (function () {
     }
 })();
 
+// Module that checks for win and draw status
+
+const gameEnd = (function () {
+
+    let clicked = document.getElementsByClassName('clicked');  // gets all clicked fields - live
+
+    function check () {   // when called, this checks if specific combinations of fields have been clicked
+
+        let textContentArray = Array.from(clicked);  // Array from html collection
+
+        let fields = {   // Creating object with X fields and O fields
+            x: [],
+            o: [],
+            get info () {  // Getter that returns joined numbers of fields
+                return [Number(this.x.join('')), Number(this.o.join(''))]
+            }
+        };
+
+        textContentArray.forEach((ele) => {   // returns numbers of clicked fields
+            if (ele.textContent === 'X'){
+                fields.x.push(ele.getAttribute('data-n'));
+            };
+            if (ele.textContent === 'O'){
+                fields.o.push(ele.getAttribute('data-n'));
+            };
+        });
+
+        let values = fields.info;  // getter function from above
+        console.log(values)
+
+        let regex = /123|456|789|1.?4.?7|2.?5.?8|3.?6.?9|1.?5.?9|3.?5.?7/g;  //regex to test against
+
+        let result = '';
+
+        if ( regex.test(values[0]) ) {  // this tests against fields.x
+            result = 'x wins'
+        } else if ( regex.test(values[1]) ) {  // this tests against fields.o
+            result = 'o wins'
+        } else if ( ( (fields.x.length > 4) || (fields.o.length > 4)) &&  // checks for a draw
+                    ( !regex.test(values[0])) &&
+                    ( !regex.test(values[1])) ) {
+            result = 'draw'
+        }
+
+        return result;
+    };
+
+    return {
+        check
+    };   
+})()
+
+
+// Function that checks for the winner and displays the win screen when an user wins
+
+const showWinDisplay = (function () {
+    
+    function show () {
+        let test = gameEnd.check();
+        if (test === 'x wins') {console.log('x wins')};
+        if (test === 'o wins') {console.log('o wins')};
+        if (test === 'draw') {console.log('its a draw')};
+    }
+    return {
+        show
+    }
+})();
+
+
 
 // Game function
 const game = (function () { 
@@ -117,33 +178,39 @@ const game = (function () {
         };
     };
 
+    // Functions that enable clicking of the fields
+    // Additional functionality on the click - avoiding repetitions of code
+    let clickFunctionality = (e) => {
+   
+        gameBoard.renderDecisions(); // Renders new, chenged array of fields
+        e.target.classList.add('clicked');  // Enables styling
+        e.target.removeEventListener('click', clickLogic);  //Disable the clicked field
+        players.removeChoosingFunctionality();  // Disable choosing of 'color' when the first field has been clicked
+        showWinDisplay.show();  // Checks for the winner 
+    }
+
 
     let clickLogic = (e) => {
         if (player1turn) {  // If it's player 1's turn
-            let position = gameBoard.fields.indexOf(e.target);
-            gameBoard.decisions[position] = players.player1.symbol;
-            gameBoard.renderDecisions();
-            e.target.classList.add('clicked');
-            e.target.removeEventListener('click', clickLogic);  //Disable the clicked field
-            players.removeChoosingFunctionality();  // Disable choosing of 'color' when a field is clicked
-    
+            let position = gameBoard.fields.indexOf(e.target);  // Finds the number of clicked field
+            gameBoard.decisions[position] = players.player1.symbol;  // Changes the array element from empty to player1's symbol
+
+            clickFunctionality(e);  // Calls the additional functionality - defined above
+
             player1turn = false;  // Enable player 2 turn
 
             this.setTimeout(function() {           // Play player 2 with delay
-                clickRandom()}, 500);
+                clickRandom()}, 500);              // clickRandom - defined above
            
-        
-        } else {
+        } else {                    // player 2 turn
             let position = gameBoard.fields.indexOf(e.target);
             gameBoard.decisions[position] = players.player2.symbol;
-            gameBoard.renderDecisions();
-            e.target.classList.add('clicked');
-            e.target.removeEventListener('click', clickLogic);
-            players.removeChoosingFunctionality();
             
             player1turn = true;
+
+            clickFunctionality(e);
         };
-    }
+    };
 
     gameBoard.fields.forEach((field) => {
         field.addEventListener('click', clickLogic);
@@ -151,6 +218,25 @@ const game = (function () {
 
 })();
 
+
+//Adding functionality to 'restart' button - module
+
+const restart = (function () {
+
+    function reloadPage () {
+        location.reload();
+    }
+
+    let restartButton = document.querySelector('#restart');
+
+    restartButton.addEventListener('click', () => {
+        reloadPage();
+    });
+
+    return {
+        reloadPage
+    };
+})();
 
 
 

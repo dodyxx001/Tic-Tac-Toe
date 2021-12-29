@@ -16,3 +16,13 @@ Version1:
 - wrote function that clicks on random available field
 - disabled occupied fields
 - version 1 took about 4 hours to finish
+
+Version 2:
+- Improved UI a bit, added CSS animations, animated Xs and Os
+- added functions that play the game - enabled computer to play 
+  random fields
+- added logic that checks for the winner - RegEx that is tested
+  against the data-number attribute of the 'clicked' fields. If
+  the numbers match the regex, the winner is returned.
+- added logic that checks for the draw
+- added functionality to 'restart' button
