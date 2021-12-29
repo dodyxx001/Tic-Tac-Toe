@@ -116,7 +116,6 @@ const gameEnd = (function () {
         });
 
         let values = fields.info;  // getter function from above
-        console.log(values)
 
         let regex = /123|456|789|1.?4.?7|2.?5.?8|3.?6.?9|1.?5.?9|3.?5.?7/g;  //regex to test against
 
@@ -144,12 +143,29 @@ const gameEnd = (function () {
 // Function that checks for the winner and displays the win screen when an user wins
 
 const showWinDisplay = (function () {
+    let display = document.querySelector('.announce');
+    let text = document.querySelector('#winner-text');
+    let body = document.querySelector('body');
     
     function show () {
+
         let test = gameEnd.check();
-        if (test === 'x wins') {console.log('x wins')};
-        if (test === 'o wins') {console.log('o wins')};
-        if (test === 'draw') {console.log('its a draw')};
+
+        if (test === 'x wins') {
+            display.classList.add('show');
+            body.classList.add('bodyBlur');
+            text.textContent = 'X WINS!';
+        };
+        if (test === 'o wins') {
+            display.classList.add('show');
+            body.classList.add('bodyBlur');
+            text.textContent = 'O WINS!';
+        };
+        if (test === 'draw') {
+            display.classList.add('show');
+            body.classList.add('bodyBlur');
+            text.textContent = 'It\'s a draw!';
+        };
     }
     return {
         show
@@ -228,8 +244,13 @@ const restart = (function () {
     }
 
     let restartButton = document.querySelector('#restart');
+    let playAgainButton = document.querySelector('#play-again');
 
     restartButton.addEventListener('click', () => {
+        reloadPage();
+    });
+
+    playAgainButton.addEventListener('click', () => {
         reloadPage();
     });
 

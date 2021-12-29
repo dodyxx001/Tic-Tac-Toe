@@ -26,3 +26,10 @@ Version 2:
   the numbers match the regex, the winner is returned.
 - added logic that checks for the draw
 - added functionality to 'restart' button
+- for now, the 'win or draw' status can be seen in the console
+- version 2 took about 4 hours to finish
+
+Version 3:
+- added display to show the win/draw status and buttons to restart
+- added transitions and box shadows in CSS
+- version 3 took about 2 hours to finish

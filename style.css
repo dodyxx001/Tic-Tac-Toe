@@ -7,11 +7,13 @@
 html {
     background-color: rgb(242, 250, 253);
     display: flex;
-    justify-content: center;
+    position: relative;
+
 }
 
 body {
     width: 60%;
+    margin: 0 auto;
 }
 
 
@@ -41,6 +43,8 @@ button:hover {
 
 .chosen {
     border-width: 3px;
+    -webkit-box-shadow: -1px 7px 22px -6px lightgrey;
+    box-shadow: -1px 7px 22px -6px lightgrey;
 }
 
 
@@ -114,4 +118,58 @@ footer button {
     border: 1.5px solid rgb(35, 53, 160);
     border-radius: 5px;
     background-color: rgb(242, 250, 253);
+    -webkit-box-shadow: -1px 7px 22px -6px lightgrey;
+    box-shadow: -1px 7px 22px -6px lightgrey;
 }
+
+/* ANNOUNCE WINNER SECTION */
+
+.announce {
+    
+    position: absolute;
+    z-index: 3;
+    width: 24rem;
+    height: 24rem;
+    /* centering */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* _________ */
+    display: flex;
+    visibility: hidden;
+    opacity: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: visibility 1s ease-out, opacity 1s linear;
+}
+
+.announce button{
+    height: 3rem;
+    width: 9rem;
+    margin: 2rem 3rem;
+    font-size: 20px;
+    border: 1.5px solid rgb(35, 53, 160);
+    border-radius: 5px;
+    background-color: rgb(242, 250, 253);
+    -webkit-box-shadow: -1px 7px 22px -6px lightgrey;
+    box-shadow: -1px 7px 22px -6px lightgrey;
+
+}
+
+.announce p{
+    font-size: 30px;
+    color: rgb(35, 53, 160);
+}
+
+.announce.show {
+    height: 24rem;
+    visibility: visible;
+    opacity: 1;
+}
+
+body.bodyBlur > *:not(.announce) {
+    filter: blur(6px);
+    opacity: 0.5;
+    transition: 1s filter linear;
+  }
