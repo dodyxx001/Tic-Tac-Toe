@@ -1,15 +1,16 @@
-// Game Board module
+// Game Board module - renders gameboard
 const gameBoard = (function () {
 
-    let decisions = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
+    let decisions = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];   // In the beginning, fields are empty
 
     const fields = Array.from(document.querySelectorAll('.field'));
 
-    function renderDecisions () {
+    function renderDecisions () {       // function that returns the letters from array into the fields
         for (let i = 0; i <= 8; i++) {
         gameBoard.fields[i].textContent = gameBoard.decisions[i];
         };
     };
+   
 
     return {
         decisions: decisions,
@@ -28,7 +29,7 @@ const Player = (type, symbol) => {
 };
 
 
-// Choosing the symbol and rendering the players module
+// Choosing the symbol and creating the players module
 const players = (function () {
 
     // Default : player = X, computer = O
@@ -88,6 +89,33 @@ const players = (function () {
     }
 })();
 
+// Choosing the difficulty module
+const difficulty = (function () {
+
+    let button = document.querySelector('#difficulty');
+
+    function choose () {
+        if (button.textContent === 'EASY'){
+            button.textContent = 'MEDIUM';
+        } else if (button.textContent === 'MEDIUM'){
+            button.textContent = 'HARD';
+        } else {
+            button.textContent = 'EASY'
+        };
+    };
+
+    button.addEventListener('click', choose);
+
+    function removeChoosingDifficulty () {
+        button.removeEventListener('click', choose);
+    }
+
+    return {
+        removeChoosingDifficulty,
+        button
+    }
+})();
+
 // Module that checks for win and draw status
 
 const gameEnd = (function () {
@@ -140,7 +168,7 @@ const gameEnd = (function () {
 })()
 
 
-// Function that checks for the winner and displays the win screen when an user wins
+// Module that checks for the winner and displays the win screen when an user wins
 
 const showWinDisplay = (function () {
     let display = document.querySelector('.announce');
@@ -174,12 +202,12 @@ const showWinDisplay = (function () {
 
 
 
-// Game function
-const game = (function () { 
 
-    let player1turn = true;  // Switch that iterates between player 1 and 2
+// Module fot computer plays
+const cpuPlay = (function () {
+    // Returns X or O, depends on which symbol the player chose
 
-    // Function that clicks a random field - COMPUTER PLAY
+    // Function that clicks a random field - COMPUTER PLAY EASY
     const clickRandom = function () {
 
         let availableFields = gameBoard.fields.filter((ele) => {   // Array of available empty fields
@@ -193,6 +221,136 @@ const game = (function () {
             randomField.click();
         };
     };
+
+    // Minimax function - AI (COMPUTER PLAY HARD)
+    
+    const humanPlayer = players.player1.symbol;
+    const aiPlayer = players.player2.symbol;
+    // const humanPlayer = 'X';
+    // const aiPlayer = 'O';
+
+    // minimax's BOARD parameter = gameBoard.fields.
+    // player = players.player1.symbol
+
+    function emptyIndexes(board) {  //works - cpuPlay.emptyIndexes(gameBoard.fields), vrne prazne indexe polj
+        let arr = [];
+        board.forEach((ele) => {
+            if (ele.innerHTML === ' ' || ele.innerHTML === ''){
+              arr.push(ele.getAttribute('data-n') - 1);
+            }
+        })
+        return arr;
+    };
+
+    function winning(board, player){  //works cpuPlay.winning(gameBoard.fields, players.player1.symbol)
+        if (
+        (board[0].innerHTML == player && board[1].innerHTML == player && board[2].innerHTML == player) ||
+        (board[3].innerHTML == player && board[4].innerHTML == player && board[5].innerHTML == player) ||
+        (board[6].innerHTML == player && board[7].innerHTML == player && board[8].innerHTML == player) ||
+        (board[0].innerHTML == player && board[3].innerHTML == player && board[6].innerHTML == player) ||
+        (board[1].innerHTML == player && board[4].innerHTML == player && board[7].innerHTML == player) ||
+        (board[2].innerHTML == player && board[5].innerHTML == player && board[8].innerHTML == player) ||
+        (board[0].innerHTML == player && board[4].innerHTML == player && board[8].innerHTML == player) ||
+        (board[2].innerHTML == player && board[4].innerHTML == player && board[6].innerHTML == player)
+        ) {
+        return true;
+        } else {
+        return false;
+        };
+    };
+
+    function minimax(newBoard, player){
+        // available spots - function above
+        let availSpots = emptyIndexes(newBoard);
+
+        // getting scores
+        if (winning(newBoard, humanPlayer)){
+            return {score:-10};
+         }
+           else if (winning(newBoard, aiPlayer)){
+           return {score:20};
+           }
+         else if (availSpots.length === 0){
+             return {score:0};
+        }
+
+        // an array to collect all the objects
+        let moves = [];
+
+                // loop through available spots
+                for (let i = 0; i < availSpots.length; i++){
+                    //create an object for each and store the index of that spot 
+            let move = {};
+                    move.index = newBoard[availSpots[i]];
+
+                    // set the empty spot to the current player
+                    newBoard[availSpots[i]].innerHTML = player;
+
+                    /*collect the score resulted from calling minimax 
+                    on the opponent of the current player*/
+                    if (player == aiPlayer){
+                    let result = minimax(newBoard, humanPlayer);
+                    move.score = result.score;
+                    }
+                    else{
+            let result = minimax(newBoard, aiPlayer);
+                    move.score = result.score;
+                    }
+
+                    // reset the spot to empty
+                    newBoard[availSpots[i]] = move.index;
+                    newBoard[availSpots[i]].innerHTML = ' ';
+
+                    // push the object to the array
+                    moves.push(move);
+                }
+                
+        let bestMove;
+                if(player === aiPlayer){
+            let bestScore = -10000;
+                    for (let i = 0; i < moves.length; i++){
+                    if(moves[i].score > bestScore){
+                        bestScore = moves[i].score;
+                        bestMove = i;
+                    }
+                    }
+                    }else{
+
+            // else loop over the moves and choose the move with the lowest score
+        let bestScore = 10000;
+                for (let i = 0; i < moves.length; i++){
+                if(moves[i].score < bestScore){
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                }
+                }
+            }
+
+            // return the chosen move (object) from the moves array
+            return moves[bestMove];
+    };
+
+    function click () {
+        (minimax(gameBoard.fields, players.player2.symbol).index).click()
+    };
+
+
+
+    
+
+
+
+    return {
+        clickRandom,
+        click
+    };
+})();
+
+
+// Game module - contains functions that enable game-playing
+const game = (function () { 
+
+    let player1turn = true;  // Switch that iterates between player 1 and 2
 
     // Functions that enable clicking of the fields
     // Additional functionality on the click - avoiding repetitions of code
@@ -215,9 +373,24 @@ const game = (function () {
 
             player1turn = false;  // Enable player 2 turn
 
-            this.setTimeout(function() {           // Play player 2 with delay
-                clickRandom()}, 500);              // clickRandom - defined above
-           
+            if (difficulty.button.textContent === 'EASY'){
+                this.setTimeout(function() {           // Play player 2 with delay
+                    cpuPlay.clickRandom()}, 500);              // player2 answers randomly
+            } else if (difficulty.button.textContent === 'HARD') {
+                this.setTimeout(function() {           // Play player 2 with delay
+                    cpuPlay.click()}, 500);            // player2 is unbeatable
+            } else {
+                this.setTimeout(function() {           // Gives 50% times unbeatable answer, 25% times random answer.
+                    let randomizer = Math.floor(Math.random() * 100);
+                    console.log(randomizer);
+                    if (randomizer < 51){
+                        cpuPlay.click();
+                    } else {
+                        cpuPlay.clickRandom();
+                    }
+                }, 500);
+            }
+
         } else {                    // player 2 turn
             let position = gameBoard.fields.indexOf(e.target);
             gameBoard.decisions[position] = players.player2.symbol;

@@ -1,12 +1,7 @@
 This is a Tic-Tac-Toe app.
-Making the app was an assignment in the The Odin Project Curriculum.
 
-We had to use objects, modules and factories.
-The goal was to have as little 'global' code as possible.
-Everything needs to be 'closed' in modules or factories.
-
-So, making of this project was a bit different from previous pro-
-jects.
+This project was made using objects, constructors and modules.
+It took quite some time to build, expeccialy the AI part.
 
 Version1:
 - created UI
@@ -33,3 +28,14 @@ Version 3:
 - added display to show the win/draw status and buttons to restart
 - added transitions and box shadows in CSS
 - version 3 took about 2 hours to finish
+
+Version 4:
+- this was the hardest part of the project, implemented the AI to
+  make the game unbeatable
+- created 3 difficulties, easy medium and hard.
+- player can now choose difficulty and 'color'
+- 'medium' difficulty means 50% chance for random field and 50% 
+  chance for unbeatable logic.
+- corrected CSS for mobile
+- this version took about 8 hours to complete
+

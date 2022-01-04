@@ -28,8 +28,8 @@ header {
 
 header button {
     height: 3rem;
-    width: 9rem;
-    margin: 0 3rem;
+    width: 7rem;
+    margin: 0 0.5rem;
     font-size: 20px;
     border: 1.5px solid rgb(35, 53, 160);
     border-radius: 5px;
@@ -45,6 +45,12 @@ button:hover {
     border-width: 3px;
     -webkit-box-shadow: -1px 7px 22px -6px lightgrey;
     box-shadow: -1px 7px 22px -6px lightgrey;
+}
+
+#difficulty{
+    height: 2rem;
+    width: 5rem;
+    font-size: 15px;
 }
 
 
@@ -172,4 +178,28 @@ body.bodyBlur > *:not(.announce) {
     filter: blur(6px);
     opacity: 0.5;
     transition: 1s filter linear;
+  }
+
+  /* MOBILE SECTION  */
+
+  @media only screen and (max-width: 450px) {
+    body {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    header button {
+        height: 3rem;
+        width: 4rem;
+        margin: 0 0.5rem;
+        font-size: 20px;
+        border: 1.5px solid rgb(35, 53, 160);
+        border-radius: 5px;
+        background-color: rgb(242, 250, 253);
+    }
+
+    .field{
+        width: 6rem;
+        height: 6rem;
+    }
   }
