@@ -1,3 +1,4 @@
+
 // Game Board module - renders gameboard
 const gameBoard = (function () {
 
@@ -11,7 +12,6 @@ const gameBoard = (function () {
         };
     };
    
-
     return {
         decisions: decisions,
         fields: fields,
@@ -244,14 +244,14 @@ const cpuPlay = (function () {
 
     function winning(board, player){  //works cpuPlay.winning(gameBoard.fields, players.player1.symbol)
         if (
-        (board[0].innerHTML == player && board[1].innerHTML == player && board[2].innerHTML == player) ||
-        (board[3].innerHTML == player && board[4].innerHTML == player && board[5].innerHTML == player) ||
-        (board[6].innerHTML == player && board[7].innerHTML == player && board[8].innerHTML == player) ||
-        (board[0].innerHTML == player && board[3].innerHTML == player && board[6].innerHTML == player) ||
-        (board[1].innerHTML == player && board[4].innerHTML == player && board[7].innerHTML == player) ||
-        (board[2].innerHTML == player && board[5].innerHTML == player && board[8].innerHTML == player) ||
-        (board[0].innerHTML == player && board[4].innerHTML == player && board[8].innerHTML == player) ||
-        (board[2].innerHTML == player && board[4].innerHTML == player && board[6].innerHTML == player)
+        (board[0].textContent == player && board[1].textContent == player && board[2].innerHTML == player) ||
+        (board[3].textContent == player && board[4].textContent == player && board[5].innerHTML == player) ||
+        (board[6].textContent == player && board[7].textContent == player && board[8].innerHTML == player) ||
+        (board[0].textContent == player && board[3].textContent == player && board[6].innerHTML == player) ||
+        (board[1].textContent == player && board[4].textContent == player && board[7].innerHTML == player) ||
+        (board[2].textContent == player && board[5].textContent == player && board[8].innerHTML == player) ||
+        (board[0].textContent == player && board[4].textContent == player && board[8].innerHTML == player) ||
+        (board[2].textContent == player && board[4].textContent == player && board[6].innerHTML == player)
         ) {
         return true;
         } else {
@@ -284,7 +284,7 @@ const cpuPlay = (function () {
                     move.index = newBoard[availSpots[i]];
 
                     // set the empty spot to the current player
-                    newBoard[availSpots[i]].innerHTML = player;
+                    newBoard[availSpots[i]].textContent = player;
 
                     /*collect the score resulted from calling minimax 
                     on the opponent of the current player*/
@@ -299,7 +299,7 @@ const cpuPlay = (function () {
 
                     // reset the spot to empty
                     newBoard[availSpots[i]] = move.index;
-                    newBoard[availSpots[i]].innerHTML = ' ';
+                    newBoard[availSpots[i]].textContent = ' ';
 
                     // push the object to the array
                     moves.push(move);
@@ -330,19 +330,15 @@ const cpuPlay = (function () {
             return moves[bestMove];
     };
 
+    // When called, clicks the returned field form minimax
     function click () {
         (minimax(gameBoard.fields, players.player2.symbol).index).click()
     };
 
-
-
-    
-
-
-
     return {
         clickRandom,
-        click
+        click,
+        minimax
     };
 })();
 
@@ -357,7 +353,7 @@ const game = (function () {
     let clickFunctionality = (e) => {
    
         gameBoard.renderDecisions(); // Renders new, chenged array of fields
-        e.target.classList.add('clicked');  // Enables styling
+        e.target.classList.add('clicked');  
         e.target.removeEventListener('click', clickLogic);  //Disable the clicked field
         players.removeChoosingFunctionality();  // Disable choosing of 'color' when the first field has been clicked
         showWinDisplay.show();  // Checks for the winner 
@@ -365,7 +361,8 @@ const game = (function () {
 
 
     let clickLogic = (e) => {
-        if (player1turn) {  // If it's player 1's turn
+        // 1. PLAYER 1 TURN
+        if (player1turn) {  
             let position = gameBoard.fields.indexOf(e.target);  // Finds the number of clicked field
             gameBoard.decisions[position] = players.player1.symbol;  // Changes the array element from empty to player1's symbol
 
@@ -373,31 +370,32 @@ const game = (function () {
 
             player1turn = false;  // Enable player 2 turn
 
-            if (difficulty.button.textContent === 'EASY'){
-                this.setTimeout(function() {           // Play player 2 with delay
-                    cpuPlay.clickRandom()}, 500);              // player2 answers randomly
-            } else if (difficulty.button.textContent === 'HARD') {
-                this.setTimeout(function() {           // Play player 2 with delay
-                    cpuPlay.click()}, 500);            // player2 is unbeatable
+            // Getting a click from CPU player
+            if (difficulty.button.textContent === 'EASY'){ // Easy difficulty - gets random field      
+                    cpuPlay.clickRandom()             
+            } else if (difficulty.button.textContent === 'HARD') {  // Hard difficulty - gets AI logic (minimax)          
+                    cpuPlay.click()            
             } else {
-                this.setTimeout(function() {           // Gives 50% times unbeatable answer, 25% times random answer.
+                    // Medium difficulty - Gives 50% times unbeatable answer, 50% times random answer.
                     let randomizer = Math.floor(Math.random() * 100);
                     console.log(randomizer);
                     if (randomizer < 51){
                         cpuPlay.click();
                     } else {
                         cpuPlay.clickRandom();
-                    }
-                }, 500);
-            }
+                    };  
+            };
 
-        } else {                    // player 2 turn
-            let position = gameBoard.fields.indexOf(e.target);
-            gameBoard.decisions[position] = players.player2.symbol;
-            
-            player1turn = true;
+        // 2. PLYER 2 TURN 
+        } else {   
+            this.setTimeout(function() {               
+                let position = gameBoard.fields.indexOf(e.target);
+                gameBoard.decisions[position] = players.player2.symbol;
+                
+                player1turn = true;
 
-            clickFunctionality(e);
+                clickFunctionality(e);
+            }, 300);
         };
     };
 
@@ -433,4 +431,5 @@ const restart = (function () {
 })();
 
 
-
+// this.setTimeout(function() { 
+// }, 500);
